@@ -1,6 +1,6 @@
 console.log("Starting!!!");
 import http from "http";
-import WebSocket, { WebSocketServer } from "ws";
+import WebSocket, { WebSocketServer, createWebSocketStream } from "ws";
 
 import { parseCommand } from "./utils/commandParser";
 import * as mouseController from "./mouseController";
@@ -46,15 +46,16 @@ ws.on("connection", (connection, req) => {
         case "draw_square":
           clientResponseMsg = drawController.draw_square(args[0]);
           break;
+        case "draw_rectangle":
+          clientResponseMsg = drawController.draw_rectangle(args[1], args[0]);
+          break;
+        case "draw_circle":
+          clientResponseMsg = drawController.draw_circle(args[0]);
+          break;
         default:
           clientResponseMsg = "Unknown command";
       }
 
-      /* if (message.toString().trim() === "mouse_position") {
-        const mouse = robot.getMousePos();
-        client.send(`${message} ${mouse.x},${mouse.y}\0`, { binary: false });
-        continue;
-      } */
       client.send(clientResponseMsg, { binary: false });
     }
   });
