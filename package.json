@@ -1,0 +1,34 @@
+{
+  "name": "remotecontrol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node --experimental-specifier-resolution=node ./dist/index.js",
+    "dev": "nodemon --watch './**/*.ts' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/french-fries-with-pepper/remoteControl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/french-fries-with-pepper/remoteControl/issues"
+  },
+  "homepage": "https://github.com/french-fries-with-pepper/remoteControl#readme",
+  "dependencies": {
+    "jimp": "^0.16.1",
+    "robotjs": "^0.6.0",
+    "typescript": "^4.7.4",
+    "ws": "^8.8.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3",
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.8.1"
+  }
+}
