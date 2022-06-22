@@ -1,8 +1,10 @@
 console.log("Starting!!!");
 import http from "http";
-import robot from "robotjs";
 import WebSocket, { WebSocketServer } from "ws";
 
+import { parseCommand } from "./utils/commandParser";
+import * as mouseController from "./mouseController";
+import * as drawController from "./drawController";
 const server = http.createServer((req, res) => {
   res.writeHead(200);
 });
@@ -23,12 +25,37 @@ ws.on("connection", (connection, req) => {
     for (const client of ws.clients) {
       if (client.readyState !== WebSocket.OPEN) continue;
       //if (client === connection) continue;
-      if (message.toString().trim() === "mouse_position") {
+      const [command, ...args] = parseCommand(message.toString());
+      let clientResponseMsg: string;
+      switch (command) {
+        case "mouse_up":
+          clientResponseMsg = mouseController.mouse_up(args[0]);
+          break;
+        case "mouse_down":
+          clientResponseMsg = mouseController.mouse_down(args[0]);
+          break;
+        case "mouse_left":
+          clientResponseMsg = mouseController.mouse_left(args[0]);
+          break;
+        case "mouse_right":
+          clientResponseMsg = mouseController.mouse_right(args[0]);
+          break;
+        case "mouse_position":
+          clientResponseMsg = mouseController.mouse_position();
+          break;
+        case "draw_square":
+          clientResponseMsg = drawController.draw_square(args[0]);
+          break;
+        default:
+          clientResponseMsg = "Unknown command";
+      }
+
+      /* if (message.toString().trim() === "mouse_position") {
         const mouse = robot.getMousePos();
         client.send(`${message} ${mouse.x},${mouse.y}\0`, { binary: false });
         continue;
-      }
-      client.send(message, { binary: false });
+      } */
+      client.send(clientResponseMsg, { binary: false });
     }
   });
   connection.on("close", () => {
