@@ -5,6 +5,8 @@ import WebSocket, { WebSocketServer, createWebSocketStream } from "ws";
 import { parseCommand } from "./utils/commandParser";
 import * as mouseController from "./mouseController";
 import * as drawController from "./drawController";
+import { prnt_scrn } from "./screenCapture";
+import Jimp from "jimp";
 const server = http.createServer((req, res) => {
   res.writeHead(200);
 });
@@ -27,6 +29,7 @@ ws.on("connection", (connection, req) => {
       //if (client === connection) continue;
       const [command, ...args] = parseCommand(message.toString());
       let clientResponseMsg: string;
+      let isScreenShot = false;
       switch (command) {
         case "mouse_up":
           clientResponseMsg = mouseController.mouse_up(args[0]);
@@ -52,11 +55,20 @@ ws.on("connection", (connection, req) => {
         case "draw_circle":
           clientResponseMsg = drawController.draw_circle(args[0]);
           break;
+        case "prnt_scrn":
+          clientResponseMsg = "prnt_scrn";
+          prnt_scrn().getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+            client.send("prnt_scrn " + buffer.toString("base64"), {
+              binary: false,
+            });
+          });
+          isScreenShot = true;
+          break;
         default:
           clientResponseMsg = "Unknown command";
       }
 
-      client.send(clientResponseMsg, { binary: false });
+      if (!isScreenShot) client.send(clientResponseMsg, { binary: false });
     }
   });
   connection.on("close", () => {
