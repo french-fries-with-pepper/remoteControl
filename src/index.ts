@@ -1,6 +1,8 @@
 console.log("Starting!!!");
 import http from "http";
 import WebSocket, { WebSocketServer, createWebSocketStream } from "ws";
+import dotenv from "dotenv";
+dotenv.config();
 
 import { parseCommand } from "./utils/commandParser";
 import * as mouseController from "./mouseController";
@@ -11,7 +13,7 @@ const server = http.createServer((req, res) => {
   res.writeHead(200);
 });
 
-const port = 8080;
+const port = process.env.port || 8080;
 
 server.listen(port, () => {
   console.log(`Listen port ${port}`);
