@@ -14,6 +14,8 @@ Whithout `.env` default port is `8080`
 
 ## Run
 `npm run start`: Run application.  
+`npm run dev`: Run application in dev mode.  
+
 
 ## Usage  
 I implement all commands from task, so, you can test it with provided frontend.  
